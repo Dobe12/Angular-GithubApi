@@ -1,29 +1,29 @@
 <div class="container">
   <div class="search-wrap">
-    <input type="text" class="search" #request>
-    <button class="search-button"><img src="https://iconizer.net/files/Brightmix/orig/monotone_search_zoom.png" alt="" (click)="getResponse(request.value)"></button>
+    <input type="text" class="search" #term>
+    <button class="search-button"><img src="https://iconizer.net/files/Brightmix/orig/monotone_search_zoom.png" alt="" (click)="getRepositories(term.value)"></button>
     <div class="refresh"></div>
   </div>
   <div class="result-wrap">
-    <div class="card" *ngFor = "let card of cardList">
+    <div class="card" *ngFor = "let repo of repositoriesList">
       <div class="card-left">
-        <div class="avatar" ><img src="{{card.authorAvatar}}" alt=""></div>
-        <div class="avatar-name">{{card.authorLogin}}</div>
+        <div class="avatar" ><img src="{{repo.authorAvatar}}" alt=""></div>
+        <div class="avatar-name">{{repo.authorLogin}}</div>
       </div>
       <div class="card-right">
-        <div class="repo-name" ><a href="{{card.link}}">{{card.name}}</a></div>
-        <div class="desc">{{card.description}}</div>
+        <div class="repo-name" ><a href="{{repo.link}}">{{repo.name}}</a></div>
+        <div class="desc">{{repo.description}}</div>
         <div class="under-repo-name">
           <div class="star">
             <div class="star-ico"><img src="https://cdn1.iconfinder.com/data/icons/material-core/21/star-256.png" alt=""></div>
-            <div class="star-count">{{card.starCount}}</div>
+            <div class="star-count">{{repo.starCount}}</div>
           </div>
           <!--          <div class="fork-count"></div>-->
           <div class="lang">
             <div class="lang-point"></div>
-            <div class="lang-name">{{card.language}}</div>
+            <div class="lang-name">{{repo.language}}</div>
           </div>
-          <div class="last-update">Last Update: {{card.lastUpdate | date: 'short'}}</div>
+          <div class="last-update">Last Update: {{repo.lastUpdate | date: 'short'}}</div>
         </div>
       </div>
     </div>

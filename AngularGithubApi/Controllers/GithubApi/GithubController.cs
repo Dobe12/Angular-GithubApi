@@ -18,18 +18,17 @@ namespace AngularGithubApi
 {
     [Route("api/[controller]")]
     [ApiController]
+ 
     public class GithubController : ControllerBase
     {
-        private readonly GithubApiService _githubApiHandler;
+        private readonly GithubApiService _githubApiService;
         private readonly RepositoryContext _repositoryContext;
-        private readonly ApplicationSettings _appSettings;
         private IMapper _mapper;
 
-        public GithubController(GithubApiService githubApiHandler, RepositoryContext repositoryContext, IOptions<ApplicationSettings> appSettings, IMapper mapper)
+        public GithubController(GithubApiService githubApiService, RepositoryContext repositoryContext, IMapper mapper)
         {
-            _githubApiHandler = githubApiHandler;
+            _githubApiService = githubApiService;
             _repositoryContext = repositoryContext;
-            _appSettings = appSettings.Value;
             _mapper = mapper;
 
         }
@@ -52,7 +51,9 @@ namespace AngularGithubApi
         [HttpGet("search/{keyWord}")]
         public async Task<IActionResult>  Search(string keyWord)
         {
-            ICollection<RepositoryViewModel> repositories = await _githubApiHandler.GetRepositories(keyWord);
+            ICollection<Repository> githubApiAnser = await _githubApiService.GetGithubApiAnser(keyWord);
+            ICollection<RepositoryViewModel> repositories = _mapper.Map<ICollection<RepositoryViewModel>>(githubApiAnser);
+
             repositories = repositories.Take(10).ToArray();
 
 

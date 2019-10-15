@@ -1,4 +1,4 @@
-export class Card {
+export class Repositories {
   id: number;
   name: string;
   authorLogin: string;

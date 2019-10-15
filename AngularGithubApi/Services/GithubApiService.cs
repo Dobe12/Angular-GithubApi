@@ -16,16 +16,14 @@ namespace AngularGithubApi.Services
 {
     public class GithubApiService
     {
-        private IMapper _mapper;
         private readonly ApplicationSettings _appSettings;
 
         public GithubApiService(IMapper mapper, IOptions<ApplicationSettings> appSettings)
         {
-            _mapper = mapper;
             _appSettings = appSettings.Value;
         }
 
-        public async Task<ICollection<RepositoryViewModel>> GetRepositories(string keyWord)
+        public async Task<ICollection<Repository>> GetGithubApiAnser(string keyWord)
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("User-Agent", _appSettings.UserAgent);
@@ -36,7 +34,7 @@ namespace AngularGithubApi.Services
 
             var githubApiAnswer = JsonConvert.DeserializeObject<GithubApiAnswer>(content);
 
-            return _mapper.Map<ICollection<RepositoryViewModel>>(githubApiAnswer.Repositories);
+            return githubApiAnswer.Repositories;
         }
 
        

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { WebApiServiceService} from './web-api-service.service';
+import { WebApiServiceService} from './github/services/web-api-service.service';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import { CommonModule} from '@angular/common';
 

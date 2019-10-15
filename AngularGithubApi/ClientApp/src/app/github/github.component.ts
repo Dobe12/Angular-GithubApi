@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {WebApiServiceService} from '../web-api-service.service';
-import { Card} from '../Classes/Card';
+import {WebApiServiceService} from './services/web-api-service.service';
+import { Repositories} from './models/Repositories';
 
 @Component({
   selector: 'app-github',
@@ -9,15 +9,15 @@ import { Card} from '../Classes/Card';
   providers: [WebApiServiceService]
 })
 export class GithubComponent implements OnInit {
-  cardList: Card[] = [];
+  repositoriesList: Repositories[] = [];
   constructor(private webapi: WebApiServiceService) { }
 
   ngOnInit() {
-    this.webapi.getLastRequest().subscribe(data => {this.cardList = data; console.log(data); },
+    this.webapi.getLastResponsedRepositories().subscribe(data => {this.repositoriesList = data; console.log(data); },
       err => console.log('HTTP error', err.message));
   }
-  getResponse(request: string) {
-    this.webapi.getResponse(request).subscribe(data => {this.cardList = data; console.log(data); },
+  getRepositories(term: string) {
+    this.webapi.getRepositories(term).subscribe(data => {this.repositoriesList = data; console.log(data); },
       err => console.log('HTTP error', err.message));
   }
 }
