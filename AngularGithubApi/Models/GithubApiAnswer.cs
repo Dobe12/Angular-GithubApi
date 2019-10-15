@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace AngularGithubApi.Models
 {
-    public class Response
+    public class GithubApiAnswer
     {
         [JsonProperty("total_count")]
         public int ResultCount { get; set; }
         [JsonProperty("items")]
-        public IEnumerable<Repository> Repo { get; set; }
+        public ICollection<Repository> Repositories { get; set; }
     }
 }

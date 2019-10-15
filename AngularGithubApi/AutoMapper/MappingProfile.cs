@@ -14,14 +14,16 @@ namespace AngularGithubApi
         public MappingProfile()
         {
 
-            CreateMap<JObject, Card>()
-                .ForMember(x => x.Name, y => y.MapFrom(j => j.SelectToken(".items.name")))
-                .ForMember(x => x.AuthorLogin, y => y.MapFrom(j => j.SelectToken(".items.owner.login")))
-                .ForMember(x => x.AuthorAvatar, y => y.MapFrom(j => j.SelectToken(".items.owner.avatar_url")))
-                .ForMember(x => x.Link, y => y.MapFrom(j => j.SelectToken(".items.url")))
-                .ForMember(x => x.Language, y => y.MapFrom(j => j.SelectToken(".items.language")))
-                .ForMember(x => x.StarCount, y => y.MapFrom(j => j.SelectToken(".items.stargazers_count")))
-                .ForMember(x => x.ForkCount, y => y.MapFrom(j => j.SelectToken(".items.forks_count")));
+            CreateMap<Repository, RepositoryViewModel>()
+                .ForMember(x => x.Name, s => s.MapFrom(x => x.Name))
+                .ForMember(x => x.AuthorLogin, s => s.MapFrom(x => x.Author.AuthorLogin))
+                .ForMember(x => x.AuthorAvatar, s => s.MapFrom(x => x.Author.AuthorAvatar))
+                .ForMember(x => x.Link, s => s.MapFrom(x => x.Link))
+                .ForMember(x => x.Language, s => s.MapFrom(x => x.Language))
+                .ForMember(x => x.StarCount, s => s.MapFrom(x => x.StarCount))
+                .ForMember(x => x.ForkCount, s => s.MapFrom(x => x.ForkCount))
+                .ForMember(x => x.LastUpdate, s => s.MapFrom(x => x.LastUpdate))
+                .ForMember(x => x.Description, s => s.MapFrom(x => x.Description));
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AngularGithubApi.ViewModel
 {
-    public class Card
+    public class RepositoryViewModel
     {
         [Key]
         public int Id { get; set; }

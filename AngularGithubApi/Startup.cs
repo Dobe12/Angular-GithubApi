@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using AngularGithubApi;
 using AngularGithubApi.Services;
 using AutoMapper;
+using AngularGithubApi.Models;
 
 namespace AngularGithubApi
 {
@@ -25,13 +26,13 @@ namespace AngularGithubApi
         public void ConfigureServices(IServiceCollection services)
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<DataBaseContext>(options =>
+            services.AddDbContext<RepositoryContext>(options =>
                 options.UseSqlServer(connection));
 
-            services.AddScoped<GithubApiHandler>();
+            services.AddScoped<GithubApiService>();
             services.AddAutoMapper(typeof(MappingProfile));
+            services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
             services.AddCors();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // In production, the Angular files will be served from this directory

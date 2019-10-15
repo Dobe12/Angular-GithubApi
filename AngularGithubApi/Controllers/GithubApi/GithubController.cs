@@ -11,6 +11,8 @@ using Newtonsoft.Json.Linq;
 using AngularGithubApi.Models;
 using AngularGithubApi.Services;
 using AngularGithubApi.ViewModel;
+using Microsoft.Extensions.Options;
+using AutoMapper;
 
 namespace AngularGithubApi
 {
@@ -18,40 +20,57 @@ namespace AngularGithubApi
     [ApiController]
     public class GithubController : ControllerBase
     {
-        private readonly GithubApiHandler _githubApiHandler;
-        private readonly DataBaseContext _dataBaseContext;
+        private readonly GithubApiService _githubApiHandler;
+        private readonly RepositoryContext _repositoryContext;
+        private readonly ApplicationSettings _appSettings;
+        private IMapper _mapper;
 
-        public GithubController(GithubApiHandler githubApiHandler, DataBaseContext dataBaseContext)
+        public GithubController(GithubApiService githubApiHandler, RepositoryContext repositoryContext, IOptions<ApplicationSettings> appSettings, IMapper mapper)
         {
             _githubApiHandler = githubApiHandler;
-            _dataBaseContext = dataBaseContext;
+            _repositoryContext = repositoryContext;
+            _appSettings = appSettings.Value;
+            _mapper = mapper;
+
         }
 
         // GET: api/Github
         [HttpGet]
-        public  ActionResult Get()
+        public  ActionResult GetSearchedRepositories()
         {
-            Requests lastRequest = _dataBaseContext.Strings.Include(s => s.Cards).OrderByDescending(d => d.Date).FirstOrDefault();
+            SearchedKeyWord searchedKeyWord = _repositoryContext.SearchedKeyWord.Include(fr => fr.Repositories).OrderByDescending(d => d.Date).FirstOrDefault();
 
-            if (lastRequest == null)
+            if (searchedKeyWord == null)
             {
                 return NotFound("No search yet");
             }
 
-            return Ok(lastRequest.Cards);
+            return Ok(searchedKeyWord.Repositories);
         }
 
         // GET: api/Github/5
-        [HttpGet("search/{request}")]
-        public async Task<ActionResult<List<Card>>>  Search(string request)
+        [HttpGet("search/{keyWord}")]
+        public async Task<IActionResult>  Search(string keyWord)
         {
-            Response response = await _githubApiHandler.GedDataFromRequest(request);
-            List<Card> cards = _githubApiHandler.AddToViewModel(response);
+            ICollection<RepositoryViewModel> repositories = await _githubApiHandler.GetRepositories(keyWord);
+            repositories = repositories.Take(10).ToArray();
 
-            _dataBaseContext.Add(new Requests { RequestString = request, Date = DateTime.Now, Cards = cards }) ;
-            _dataBaseContext.SaveChanges();
 
-            return Ok(cards);
+            var searchedKeyWord = await _repositoryContext.SearchedKeyWord.FindAsync(keyWord);
+            if (searchedKeyWord == null)
+            {
+                searchedKeyWord = new SearchedKeyWord() { KeyWord = keyWord, Repositories = repositories, Date = DateTime.Now };
+                _repositoryContext.SearchedKeyWord.Add(searchedKeyWord);
+            }
+            else
+            {
+                searchedKeyWord.Repositories = repositories;
+                _repositoryContext.Update(searchedKeyWord);
+            }
+
+            await _repositoryContext.SaveChangesAsync();
+
+            return Ok(repositories);
         }
 
     }

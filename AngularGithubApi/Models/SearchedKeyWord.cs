@@ -7,12 +7,12 @@ using AngularGithubApi.ViewModel;
 
 namespace AngularGithubApi.Models
 {
-    public class Requests
-    {       
-        public string RequestString { get; set; }
+    public class SearchedKeyWord
+    {
         [Key]
+        public string KeyWord { get; set; }       
         public DateTime Date { get; set; }
-        public IEnumerable<Card> Cards { get; set; }
+        public ICollection<RepositoryViewModel> Repositories { get; set; }
 
     }
 }

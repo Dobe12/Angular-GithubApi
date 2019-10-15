@@ -8,11 +8,11 @@ using AngularGithubApi.ViewModel;
 
 namespace AngularGithubApi
 {
-    public class DataBaseContext : DbContext
+    public class RepositoryContext : DbContext
     {
-        public DbSet<Requests> Strings { get; set; }
-        public DbSet<Card> Cards { get; set; }
-        public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options)
+        public DbSet<SearchedKeyWord> SearchedKeyWord { get; set; }
+        public DbSet<RepositoryViewModel> Repository { get; set; }
+        public RepositoryContext(DbContextOptions<RepositoryContext> options) : base(options)
         {
             Database.EnsureCreated();
         }
